@@ -1,0 +1,32 @@
+{
+  "name": "nks-i18n",
+  "description": "",
+  "version":"0.9.0",
+  "main": "",
+  "authors": [
+    "Konstantin Nizhinskiy"
+  ],
+  "keywords": [
+    "i18n",
+    "nks-i18n",
+    "grunt-i18n",
+    "build-i18n"
+  ],
+  "dependencies": {
+
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/konstantin-nizhinskiy/I18n",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "src",
+    "tasks",
+    "grunt",
+    "bower_components",
+    "test",
+    "tasks",
+    "tests"
+  ]
+}
