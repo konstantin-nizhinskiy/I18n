@@ -1,23 +1,31 @@
 /**
  * Change local
  *
- * @param local {string} - local (UA,EN)
-  * @event error:translation:key - Not fount key translation
+ * @param local {string} - local (UA,EN...)
+ * @event changeLocal - event change local
  * @return {string}
  */
-I18n.prototype.changeLocal=function(local){
-    if(this.translations[local]){
-        this._local=local;
-        this.trigger('changeLocal',local);
-    }else{
-        // Adding the script tag to the head as suggested before
-        var head = document.getElementsByTagName('head')[0];
-        var script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src = this._translationUrl+'Translations.'+local+'.min.js';
-        script.onload = (function(){
-            this.trigger('changeLocal',local);
-        }).bind(this);
-        head.appendChild(script);
+I18n.prototype.changeLocal = function (local) {
+    var urls = [],_this=this;
+    for (var url in _bundleFile) {
+        if (_bundleFile[url][local] !== true) {
+            urls.push(url);
+        }
+    }
+    if (urls.length > 0) {
+        var _countLoad = urls.length,
+            _callback = function () {
+                _countLoad--;
+                if(_countLoad===0){
+                    _this.trigger('changeLocal', local);
+                }
+            };
+        _setLocal(local);
+        urls.forEach(function(url){
+            _this.load(url,_callback)
+        });
+    } else {
+        _setLocal(local);
+        this.trigger('changeLocal', local);
     }
 };

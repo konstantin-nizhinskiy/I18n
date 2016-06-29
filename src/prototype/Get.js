@@ -3,28 +3,31 @@
  *
  * @param key {string} - Key translation
  * @param params {object} - Params merge with translation messengers
- * @event error:translation:key - Not fount key translation
+ * @event error - Not fount key translation  [this.trigger('error','error:translation:key',key,this.getLocal());]
+ * @event error:translation:key - Not fount key translation  [this.trigger('error',key,this.getLocal());]
  * @return {string}
  */
 I18n.prototype.get=function(key,params){
-    var _translation;
-    if(this.translations[this._local] && this.translations[this._local][key]){
-        _translation=this.translations[this._local][key];
+    var _text;
+    if(_translations[this.getLocal()] && _translations[this.getLocal()][key]){
+        _text=_translations[this.getLocal()][key];
         if('object'===typeof params){
             for (var paramKey in params){
-                _translation=_translation.replace(new RegExp('{{[ ]{0,}'+paramKey+'[ ]{0,}}}','g'),params[paramKey])
+                _text=_text.replace(new RegExp('{{[ ]{0,}'+paramKey+'[ ]{0,}}}','g'),params[paramKey])
             }
         }
-        return _translation;
+        return _text;
     }else{
-        this.trigger('error:translation:key','not fount key translation',this._local);
-        if(this._localDefault && this.translations[this._localDefault] && this.translations[this._localDefault][key]){
-            _translation=this.translations[this._localDefault][key];
+        this.trigger('error','error:translation:key',key,this.getLocal());
+        this.trigger('error:translation:key',key,this.getLocal());
+        if(_localDefault && _translations[_localDefault] && _translations[_localDefault][key]){
+            _text=_translations[_localDefault][key];
             if('object'===typeof params){
                 for (var paramKey in params){
-                    _translation=_translation.replace(new RegExp('{{[ ]{0,}'+paramKey+'[ ]{0,}}}','g'),params[paramKey])
+                    _text=_text.replace(new RegExp('{{[ ]{0,}'+paramKey+'[ ]{0,}}}','g'),params[paramKey])
                 }
             }
+            return _text;
         }else{
             return key;
         }

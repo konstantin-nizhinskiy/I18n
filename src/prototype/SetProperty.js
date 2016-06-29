@@ -4,17 +4,17 @@
  * @param params {object} params property
  * @param params.local {string} location on
  * @param params.localDefault {string} local on default if key of main local is empty
- * @param params.translationUrl {string} translations url
+ * @param params.versionJson {string} versionJson add to url params load file translation
  */
 I18n.prototype.setProperty=function(params){
     if(params.local){
-        this._local=params.local
+        _local=params.local
     }
     if(params.localDefault){
-        this._localDefault=params.localDefault;
+        _localDefault=params.localDefault;
     }
-    if(params.translationUrl){
-        this._translationUrl=params.translationUrl;
+    if(params.versionJson){
+        this._versionJson=params.versionJson;
     }
 
 };

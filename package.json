@@ -2,7 +2,7 @@
   "name": "grunt-nks-i18n",
   "description":"Builder translate you project",
   "license": "MIT",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "author": "Konstantin Nizhinskiy",
   "repository": {
     "type": "git",
@@ -16,6 +16,15 @@
     "History.md",
     "LICENSE-MIT"
   ],
+  "keywords": [
+    "gruntplugin",
+    "i18n",
+    "grunt-i18n"
+  ],
+  "dependencies": {
+    "chalk": "^1.1.1"
+  },
+  "main":"tasks/i18n.js",
   "devDependencies": {
     "grunt": "~0.4.4",
     "grunt-banner": "^0.5.0",

@@ -1,0 +1,5 @@
+{
+  "test.test.test": "Test test test",
+  "count.books": "{{ count}} books",
+  "book.name.pages.number": "Book {{ name }} page {{ number }}"
+}

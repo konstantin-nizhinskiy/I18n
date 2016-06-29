@@ -5,14 +5,49 @@
     <title></title>
 </head>
 <body>
+<div>
+    <div id="loadBundle1"></div>
+    <div>
+        <div id="key1"></div>
+        <div id="key2"></div>
+        <div id="key3"></div>
+
+    </div>
+    <button onclick="loadBundle2()">Load bundle2 translations</button>
+    <div id="loadBundle2"></div>
+    <div>
+        <div id="key4"></div>
+    </div>
+    <button onclick="i18n.changeLocal('UA')">UA</button>
+    <button onclick="i18n.changeLocal('EN')">EN</button>
+
+</div>
 <script src="../dist/I18n.js" type="application/javascript"></script>
 <script>
+    var callbackLoadBundle1 = function () {
+           document.getElementById('loadBundle1').innerText = 'Bundle1 translations load';
+           document.getElementById('key1').innerText=i18n.get("test.test.test");
+           document.getElementById('key2').innerText=i18n.get("count.books", {count: 20});
+           document.getElementById('key3').innerText=i18n.get("book.name.pages.number", {name: 'JS', number: 201});
+       },
+       callbackLoadBundle2 = function () {
+           document.getElementById('loadBundle2').innerText = 'Bundle2 translations load';
+           document.getElementById('key4').innerText=i18n.get("test.test.test.bundle2");
+       };
+    i18n.on('changeLocal',function(){
+        callbackLoadBundle1();
+        callbackLoadBundle2();
+    });
     i18n.setProperty({
-        local: 'UA',
-        localDefault: 'UA',
-        translationUrl: 'translations/'
-    })
+        local: 'EN',
+        localDefault: 'EN'
+    });
+    i18n.load('translations/bundle1.min', callbackLoadBundle1);
+    loadBundle2 = function () {
+        i18n.load('translations/bundle2.min', callbackLoadBundle2);
+    }
 
 </script>
+
 </body>
 </html>

@@ -11,8 +11,8 @@ module.exports = {
         },
         i18n: {
             files: {
-                'dist/i18n.min.js':[
-                    'dist/i18n.js'
+                'dist/I18n.min.js':[
+                    'dist/I18n.js'
                 ]
 
 
