@@ -1,14 +1,14 @@
 /**
- * Change local
+ * Change locale
  *
- * @param local {string} - local (UA,EN...)
- * @event changeLocal - event change local
+ * @param locale {string} - locale (UA,EN...)
+ * @event changeLocale - event change locale
  * @return {string}
  */
-I18n.prototype.changeLocal = function (local) {
+I18n.prototype.changeLocale = function (locale) {
     var urls = [],_this=this;
     for (var url in _bundleFile) {
-        if (_bundleFile[url][local] !== true) {
+        if (_bundleFile[url][locale] !== true) {
             urls.push(url);
         }
     }
@@ -17,15 +17,15 @@ I18n.prototype.changeLocal = function (local) {
             _callback = function () {
                 _countLoad--;
                 if(_countLoad===0){
-                    _this.trigger('changeLocal', local);
+                    _this.trigger('changeLocale', locale);
                 }
             };
-        _setLocal(local);
+        _setLocale(locale);
         urls.forEach(function(url){
             _this.load(url,_callback)
         });
     } else {
-        _setLocal(local);
-        this.trigger('changeLocal', local);
+        _setLocale(locale);
+        this.trigger('changeLocale', locale);
     }
 };

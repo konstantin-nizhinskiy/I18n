@@ -13,23 +13,23 @@
      */
     var I18n = function () {
             this.setProperty({
-                local: 'UA',
-                localDefault: 'UA',
+                locale: 'UA',
+                localeDefault: 'UA',
                 versionJson: +new Date()
             });
         },
         /**
          *
-         * @type {string} - local active now
+         * @type {string} - locale active now
          * @private
          */
-        _local='UA',
+        _locale='UA',
         /**
          *
-         * @type {string} - default local active now
+         * @type {string} - default locale active now
          * @private
          */
-        _localDefault='UA',
+        _localeDefault='UA',
         /**
          *
          * @type {object} - translations object load

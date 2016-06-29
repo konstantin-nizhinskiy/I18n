@@ -1,8 +1,8 @@
 /*
 name: nks-i18n
-version: 0.9.0
+version: 0.9.2
 author: Konstantin Nizhinskiy
-date: 2016-06-29 11:06:10 
+date: 2016-06-29 19:06:53 
 
 */
 (function (root, factory) {
@@ -20,23 +20,23 @@ date: 2016-06-29 11:06:10
      */
     var I18n = function () {
             this.setProperty({
-                local: 'UA',
-                localDefault: 'UA',
+                locale: 'UA',
+                localeDefault: 'UA',
                 versionJson: +new Date()
             });
         },
         /**
          *
-         * @type {string} - local active now
+         * @type {string} - locale active now
          * @private
          */
-        _local='UA',
+        _locale='UA',
         /**
          *
-         * @type {string} - default local active now
+         * @type {string} - default locale active now
          * @private
          */
-        _localDefault='UA',
+        _localeDefault='UA',
         /**
          *
          * @type {object} - translations object load
@@ -51,16 +51,16 @@ date: 2016-06-29 11:06:10
         _bundleFile = {};
     // 
 /**
- * Change local
+ * Change locale
  *
- * @param local {string} - local (UA,EN...)
- * @event changeLocal - event change local
+ * @param locale {string} - locale (UA,EN...)
+ * @event changeLocale - event change locale
  * @return {string}
  */
-I18n.prototype.changeLocal = function (local) {
+I18n.prototype.changeLocale = function (locale) {
     var urls = [],_this=this;
     for (var url in _bundleFile) {
-        if (_bundleFile[url][local] !== true) {
+        if (_bundleFile[url][locale] !== true) {
             urls.push(url);
         }
     }
@@ -69,16 +69,16 @@ I18n.prototype.changeLocal = function (local) {
             _callback = function () {
                 _countLoad--;
                 if(_countLoad===0){
-                    _this.trigger('changeLocal', local);
+                    _this.trigger('changeLocale', locale);
                 }
             };
-        _setLocal(local);
+        _setLocale(locale);
         urls.forEach(function(url){
             _this.load(url,_callback)
         });
     } else {
-        _setLocal(local);
-        this.trigger('changeLocal', local);
+        _setLocale(locale);
+        this.trigger('changeLocale', locale);
     }
 };
 var eventCallback={};
@@ -183,14 +183,14 @@ I18n.prototype.trigger=function(event){
  *
  * @param key {string} - Key translation
  * @param params {object} - Params merge with translation messengers
- * @event error - Not fount key translation  [this.trigger('error','error:translation:key',key,this.getLocal());]
- * @event error:translation:key - Not fount key translation  [this.trigger('error',key,this.getLocal());]
+ * @event error - Not fount key translation  [this.trigger('error','error:translation:key',key,this.getLocale());]
+ * @event error:translation:key - Not fount key translation  [this.trigger('error',key,this.getLocale());]
  * @return {string}
  */
 I18n.prototype.get=function(key,params){
     var _text;
-    if(_translations[this.getLocal()] && _translations[this.getLocal()][key]){
-        _text=_translations[this.getLocal()][key];
+    if(_translations[this.getLocale()] && _translations[this.getLocale()][key]){
+        _text=_translations[this.getLocale()][key];
         if('object'===typeof params){
             for (var paramKey in params){
                 _text=_text.replace(new RegExp('{{[ ]{0,}'+paramKey+'[ ]{0,}}}','g'),params[paramKey])
@@ -198,10 +198,10 @@ I18n.prototype.get=function(key,params){
         }
         return _text;
     }else{
-        this.trigger('error','error:translation:key',key,this.getLocal());
-        this.trigger('error:translation:key',key,this.getLocal());
-        if(_localDefault && _translations[_localDefault] && _translations[_localDefault][key]){
-            _text=_translations[_localDefault][key];
+        this.trigger('error','error:translation:key',key,this.getLocale());
+        this.trigger('error:translation:key',key,this.getLocale());
+        if(_localeDefault && _translations[_localeDefault] && _translations[_localeDefault][key]){
+            _text=_translations[_localeDefault][key];
             if('object'===typeof params){
                 for (var paramKey in params){
                     _text=_text.replace(new RegExp('{{[ ]{0,}'+paramKey+'[ ]{0,}}}','g'),params[paramKey])
@@ -214,12 +214,12 @@ I18n.prototype.get=function(key,params){
     }
 };
 /**
- * Get local now
+ * Get locale now
  *
  * @return {string}
  */
-I18n.prototype.getLocal=function(){
-    return _local;
+I18n.prototype.getLocale=function(){
+    return _locale;
 };
 /**
  * Load translations JSON
@@ -235,10 +235,10 @@ I18n.prototype.load=function(url,callback){
     if('undefined'===typeof _bundleFile[url]){
         _bundleFile[url]={};
     }
-    if('undefined'=== typeof _bundleFile[url][this.getLocal()]) {
+    if('undefined'=== typeof _bundleFile[url][this.getLocale()]) {
         var xhr = new XMLHttpRequest(),
             _this = this;
-        xhr.open('GET', url + '.' + this.getLocal().toLowerCase() + '.json?'+this._versionJson, true);
+        xhr.open('GET', url + '.' + this.getLocale().toLowerCase() + '.json?'+this._versionJson, true);
         xhr.send();
 
         xhr.onreadystatechange = function () {
@@ -252,17 +252,17 @@ I18n.prototype.load=function(url,callback){
                 }
             } else {
                 var _json=JSON.parse(xhr.responseText);
-                _bundleFile[url][_this.getLocal()] = true;
-                if('undefined'===typeof _translations[_this.getLocal()]){
-                    _translations[_this.getLocal()]=_json;
+                _bundleFile[url][_this.getLocale()] = true;
+                if('undefined'===typeof _translations[_this.getLocale()]){
+                    _translations[_this.getLocale()]=_json;
                 }else{
                     for (var key in _json){
-                        if(!_translations[_this.getLocal()][key]) {
-                            _translations[_this.getLocal()][key] = _json[key];
+                        if(!_translations[_this.getLocale()][key]) {
+                            _translations[_this.getLocale()][key] = _json[key];
                         }
                     }
                 }
-                _this.trigger('load', url,_bundleFile[url][_this.getLocal()]);
+                _this.trigger('load', url,_bundleFile[url][_this.getLocale()]);
                 if('function'===typeof callback){
                     callback()
                 }
@@ -278,27 +278,27 @@ I18n.prototype.load=function(url,callback){
 
 };
 /**
- * Set local now
+ * Set locale now
  * @private
  * @return {string}
  */
-var _setLocal=function(local){
-   _local=local;
+var _setLocale=function(locale){
+   _locale=locale;
 };
 /**
  * set property i18n
  *
  * @param params {object} params property
- * @param params.local {string} location on
- * @param params.localDefault {string} local on default if key of main local is empty
+ * @param params.locale {string} location on
+ * @param params.localeDefault {string} locale on default if key of main locale is empty
  * @param params.versionJson {string} versionJson add to url params load file translation
  */
 I18n.prototype.setProperty=function(params){
-    if(params.local){
-        _local=params.local
+    if(params.locale){
+        _locale=params.locale
     }
     if(params.localDefault){
-        _localDefault=params.localDefault;
+        _localeDefault=params.localeDefault;
     }
     if(params.versionJson){
         this._versionJson=params.versionJson;

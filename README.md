@@ -37,7 +37,7 @@ Task targets, files and options may be specified according to the grunt [Configu
    
 ### Options
 
-#### locals 
+#### locales 
 Type: `Array`  
 Default: `['en']`
 
@@ -78,7 +78,7 @@ This Regex finds keys in your file project
 grunt.initConfig({
     i18n: {
         options: {
-            locals:['ua','en']
+            locales:['ua','en']
         },
         bundle1: {
             files: {
@@ -108,8 +108,8 @@ build file:
 ## Config
 ```js
     i18n.setProperty({
-        local: 'EN', // location on
-        localDefault: 'EN', //local on default if key of main local is empty
+        locale: 'EN', // location on
+        localeDefault: 'EN', //locale on default if key of main locale is empty
         versionJson: '1.1.1' // versionJson add to url params load file translation
     });
 ```
@@ -118,9 +118,9 @@ build file:
 ## Methods
  Method               | Arguments         |  info           
 ----------------------|-------------------|------------------------
- changeLocal          | local             | Change local
+ changeLocale         | locale            | Change locale
  get                  | key, params       | Get translations
- getLocal             |                   | Get local now
+ getLocale            |                   | Get locale now
  load                 | url, [callback]   | Load translations JSON
  setProperty          | params            | Set property i18n
  on                   | event, callback   | Bind event callback
@@ -132,9 +132,9 @@ build file:
 ## Events
  Event                | Arguments               |  info           
 ----------------------|-------------------------|-------------------
-changeLocal           | local                   | Event change local
+changeLocale          | locale                  | Event change locale
 load                  | url, JSON               | Event load file json
-error:translation:key | key, local              | Event not fount key translation 
+error:translation:key | key, locale             | Event not fount key translation 
 error:load            | statusText, status, xhr | Event error load json translation
 error                 | type, *                 | All error event error:*
 
@@ -145,8 +145,8 @@ error                 | type, *                 | All error event error:*
     <script src="dist/I18n.js" type="application/javascript"></script>
     <script>
         i18n.setProperty({
-            local: 'en',
-            localDefault: 'en'
+            locale: 'en',
+            localeDefault: 'en'
         });
         var demoFunction=function(){
             console.log(i18n.get("test.test.test")); // Test test test
@@ -154,15 +154,15 @@ error                 | type, *                 | All error event error:*
             console.log(i18n.get("book.name.pages.number", {name: 'JS', number: 201})); // Book JS page 201
         };
         i18n.load('translations/bundle1.min', demoFunction );
-        i18n.on('changeLocal',function(){
-            console.log('change local');
+        i18n.on('changeLocale',function(){
+            console.log('change locale');
             demoFunction();
         });
     </script>
   
             
-    <button onclick="i18n.changeLocal('UA')">UA</button>
-    <button onclick="i18n.changeLocal('EN')">EN</button>
+    <button onclick="i18n.changeLocale('UA')">UA</button>
+    <button onclick="i18n.changeLocale('EN')">EN</button>
 
 
 <!-- ... -->

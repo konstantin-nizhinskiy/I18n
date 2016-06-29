@@ -6,7 +6,7 @@
 
 
 ### Count empty keys 
- local        | Count 
+ locale        | Count 
 --------------|-------------
  ua           | 3 
  en           | 4 
@@ -15,14 +15,14 @@
 
  * **dist/i18n.min.js**
 
-     local        | Count       |  Empty
+     locale        | Count       |  Empty
     --------------|-------------|-------------
      ua           | 4 | 2 
      en           | 4 | 3 
 
  * **dist/i18n2.min.js**
 
-     local        | Count       |  Empty
+     locale        | Count       |  Empty
     --------------|-------------|-------------
      ua           | 5 | 3 
      en           | 5 | 4 

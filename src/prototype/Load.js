@@ -12,10 +12,10 @@ I18n.prototype.load=function(url,callback){
     if('undefined'===typeof _bundleFile[url]){
         _bundleFile[url]={};
     }
-    if('undefined'=== typeof _bundleFile[url][this.getLocal()]) {
+    if('undefined'=== typeof _bundleFile[url][this.getLocale()]) {
         var xhr = new XMLHttpRequest(),
             _this = this;
-        xhr.open('GET', url + '.' + this.getLocal().toLowerCase() + '.json?'+this._versionJson, true);
+        xhr.open('GET', url + '.' + this.getLocale().toLowerCase() + '.json?'+this._versionJson, true);
         xhr.send();
 
         xhr.onreadystatechange = function () {
@@ -29,17 +29,17 @@ I18n.prototype.load=function(url,callback){
                 }
             } else {
                 var _json=JSON.parse(xhr.responseText);
-                _bundleFile[url][_this.getLocal()] = true;
-                if('undefined'===typeof _translations[_this.getLocal()]){
-                    _translations[_this.getLocal()]=_json;
+                _bundleFile[url][_this.getLocale()] = true;
+                if('undefined'===typeof _translations[_this.getLocale()]){
+                    _translations[_this.getLocale()]=_json;
                 }else{
                     for (var key in _json){
-                        if(!_translations[_this.getLocal()][key]) {
-                            _translations[_this.getLocal()][key] = _json[key];
+                        if(!_translations[_this.getLocale()][key]) {
+                            _translations[_this.getLocale()][key] = _json[key];
                         }
                     }
                 }
-                _this.trigger('load', url,_bundleFile[url][_this.getLocal()]);
+                _this.trigger('load', url,_bundleFile[url][_this.getLocale()]);
                 if('function'===typeof callback){
                     callback()
                 }

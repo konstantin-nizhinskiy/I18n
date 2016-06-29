@@ -3,8 +3,8 @@ var grunt = require ( 'grunt' );
 
 
 module.exports = function () {
-    var InfoBuild=function(options,keysLocalBundle,allKeys){
-        var tplContent,countKeys= 0,keysLocalEmpty=[],tpl;
+    var InfoBuild=function(options,keysLocaleBundle,allKeys){
+        var tplContent,countKeys= 0,keysLocaleEmpty=[],tpl;
             tpl =
             '# Info last build translation \n' +
             '\n'+
@@ -14,24 +14,24 @@ module.exports = function () {
             '\n' +
             '\n' +
             '### Count empty keys \n'+
-            ' local        | Count \n' +
+            ' locale        | Count \n' +
             '--------------|-------------\n' +
-            '<%  keysLocalEmpty.forEach(function(row){ %>' +
-            ' <%= row.local %>           | <%= row.count %> \n' +
+            '<%  keysLocaleEmpty.forEach(function(row){ %>' +
+            ' <%= row.locale %>           | <%= row.count %> \n' +
             '<% }) %>' +
 
             '\n' +
 
             '### Count keys by bundle: \n'+
 
-            '<% for(var key in keysLocalBundle){ %>' +
-            '<% var row=keysLocalBundle[key]; %>'+
+            '<% for(var key in keysLocaleBundle){ %>' +
+            '<% var row=keysLocaleBundle[key]; %>'+
             '\n' +
             ' * **<%= row.name %>**\n\n' +
-            '     local        | Count       |  Empty\n' +
+            '     locale        | Count       |  Empty\n' +
             '    --------------|-------------|-------------\n' +
-            '<%  row.locals.forEach(function(row2){ %>' +
-            '     <%= row2.local %>           | <%= row2.count %> | <%= row2.countEmpty %> \n' +
+            '<%  row.locales.forEach(function(row2){ %>' +
+            '     <%= row2.locale %>           | <%= row2.count %> | <%= row2.countEmpty %> \n' +
             '<% }) %>' +
             '<% } %>'+
 
@@ -39,32 +39,32 @@ module.exports = function () {
 
             '';
         for ( var key in allKeys){
-            var localEmpty={'local':key,count:0,keys:0};
+            var localeEmpty={'locale':key,count:0,keys:0};
             for (var key2 in allKeys[key]){
                 if(allKeys[key][key2]===''){
-                    localEmpty.count++;
+                    localeEmpty.count++;
                 }
-                localEmpty.keys++;
+                localeEmpty.keys++;
             }
-            keysLocalEmpty.push(localEmpty)
+            keysLocaleEmpty.push(localeEmpty)
         }
-        if(keysLocalEmpty.length>0){
-            countKeys=keysLocalEmpty[0].keys;
+        if(keysLocaleEmpty.length>0){
+            countKeys=keysLocaleEmpty[0].keys;
         }
         tplContent=grunt.template.process(tpl,{
             data:{
                 time:grunt.template.today("yyyy-mm-dd HH:mm:ss"),
                 countKeys:countKeys,
-                keysLocalEmpty:keysLocalEmpty,
-                keysLocalBundle:keysLocalBundle
+                keysLocaleEmpty:keysLocaleEmpty,
+                keysLocaleBundle:keysLocaleBundle
 
             }
         });
         grunt.file.write(options.cacheDir+'doc/InfoBuild.md',tplContent);
     };
 
-    var AllKeysBuild=function(options,keysLocalBundle,allKeys) {
-        var tplContent, countKeys = 0, infoKeys = [], tpl;
+    var AllKeysBuild=function(options,keysLocaleBundle,allKeys) {
+        var tplContent, infoKeys = [], tpl;
         tpl =
             '# All keys translation \n' +
             '\n' +
@@ -74,31 +74,31 @@ module.exports = function () {
             '\n' +
             '\n' +
             '### All keys \n' +
-            ' Keys                        | <%  locals.forEach(function(row){ %> <%= row %> | <% }) %>\n' +
+            ' Keys                        | <%  locales.forEach(function(row){ %> <%= row %> | <% }) %>\n' +
             '-----------------------------|-------------\n' +
             '<%  infoKeys.forEach(function(keyRow){ %>' +
-            ' <%= keyRow.key %> |<%  keyRow.localProperty.forEach(function(row){ %> <%= row %> | <% }) %>\n' +
+            ' <%= keyRow.key %> |<%  keyRow.localeProperty.forEach(function(row){ %> <%= row %> | <% }) %>\n' +
             '<% }) %>'+
             '\n' +
             '\n' +
             '### All keys value \n' +
-            ' Keys                        | <%  locals.forEach(function(row){ %> <%= row %> | <% }) %>\n' +
+            ' Keys                        | <%  locales.forEach(function(row){ %> <%= row %> | <% }) %>\n' +
             '-----------------------------|-------------\n' +
             '<%  infoKeys.forEach(function(keyRow){ %>' +
-            ' <%= keyRow.key %> |<%  keyRow.localValue.forEach(function(row){ %> <%= row %> | <% }) %>\n' +
+            ' <%= keyRow.key %> |<%  keyRow.localeValue.forEach(function(row){ %> <%= row %> | <% }) %>\n' +
             '<% }) %>'+
 
             '\n';
-        if(options.locals.length>0){
-            for (var key in allKeys[options.locals[0]]){
-                var _infoKey={key:key,localProperty:[],localValue:[]};
-                options.locals.forEach(function(local){
-                    if(allKeys[local][key]=='' || !allKeys[local][key]){
-                        _infoKey.localProperty.push(' - ');
-                        _infoKey.localValue.push('');
+        if(options.locales.length>0){
+            for (var key in allKeys[options.locales[0]]){
+                var _infoKey={key:key,localeProperty:[],localeValue:[]};
+                options.locales.forEach(function(locale){
+                    if(allKeys[locale][key]=='' || !allKeys[locale][key]){
+                        _infoKey.localeProperty.push(' - ');
+                        _infoKey.localeValue.push('');
                     }else {
-                        _infoKey.localProperty.push(' + ');
-                        _infoKey.localValue.push(allKeys[local][key]);
+                        _infoKey.localeProperty.push(' + ');
+                        _infoKey.localeValue.push(allKeys[locale][key]);
                     }
                 });
                 infoKeys.push(_infoKey)
@@ -119,7 +119,7 @@ module.exports = function () {
             data: {
                 time: grunt.template.today("yyyy-mm-dd HH:mm:ss"),
                 infoKeys: infoKeys,
-                locals: options.locals
+                locales: options.locales
 
             }
         });
@@ -151,7 +151,7 @@ module.exports = function () {
         });
         grunt.file.write(options.cacheDir + 'doc/AllKeysFileBuild.md', tplContent);
     };
-    var AllKeysSizeBuild=function(options,keysLocalBundle,allKeys) {
+    var AllKeysSizeBuild=function(options,keysLocaleBundle,allKeys) {
         var tplContent, infoKeys = [], tpl;
         tpl =
             '# All keys size translation \n' +
@@ -162,40 +162,40 @@ module.exports = function () {
             '\n' +
             '\n' +
             '### All keys \n' +
-            ' Keys                        | <%  locals.forEach(function(row){ %> <%= row %> | <% }) %> Min size / Max size / Max diff |\n' +
+            ' Keys                        | <%  locales.forEach(function(row){ %> <%= row %> | <% }) %> Min size / Max size / Max diff |\n' +
             '-----------------------------|-------------\n' +
             '<%  infoKeys.forEach(function(keyRow){ %>' +
-            ' <%= keyRow.key %> |<%  keyRow.localSize.forEach(function(row,key){ %> <%= row %> / <%= keyRow.localSizeDiff[key] %> (<%= keyRow.localSizeDiffPercent[key] %> %) | <% }) %> <%= keyRow.minSize %> / <%= keyRow.maxSize %> / <%= keyRow.maxDiff %> |\n' +
+            ' <%= keyRow.key %> |<%  keyRow.localeSize.forEach(function(row,key){ %> <%= row %> / <%= keyRow.localeSizeDiff[key] %> (<%= keyRow.localeSizeDiffPercent[key] %> %) | <% }) %> <%= keyRow.minSize %> / <%= keyRow.maxSize %> / <%= keyRow.maxDiff %> |\n' +
             '<% }) %>'+
             '\n';
-        if(options.locals.length>0){
-            for (var key in allKeys[options.locals[0]]){
-                var _infoKey={key:key,localSize:[],localSizeDiffPercent:[],localSizeDiff:[],minSize:0,maxSize:0,maxDiff:0};
+        if(options.locales.length>0){
+            for (var key in allKeys[options.locales[0]]){
+                var _infoKey={key:key,localeSize:[],localeSizeDiffPercent:[],localeSizeDiff:[],minSize:0,maxSize:0,maxDiff:0};
 
-                options.locals.forEach(function(local){
-                    if(allKeys[local][key]=='' || !allKeys[local][key]){
-                        _infoKey.localSize.push(0);
+                options.locales.forEach(function(locale){
+                    if(allKeys[locale][key]=='' || !allKeys[locale][key]){
+                        _infoKey.localeSize.push(0);
                     }else {
-                        _infoKey.localSize.push(allKeys[local][key].length);
-                        if(allKeys[local][key].length < _infoKey.minSize || _infoKey.minSize===0){
-                            _infoKey.minSize=allKeys[local][key].length;
+                        _infoKey.localeSize.push(allKeys[locale][key].length);
+                        if(allKeys[locale][key].length < _infoKey.minSize || _infoKey.minSize===0){
+                            _infoKey.minSize=allKeys[locale][key].length;
                         }
-                        if(allKeys[local][key].length >_infoKey.maxSize){
-                            _infoKey.maxSize=allKeys[local][key].length;
+                        if(allKeys[locale][key].length >_infoKey.maxSize){
+                            _infoKey.maxSize=allKeys[locale][key].length;
                         }
                     }
                 });
-                _infoKey.localSize.forEach(function(size){
+                _infoKey.localeSize.forEach(function(size){
                     if(size!==0){
-                        _infoKey.localSizeDiffPercent.push(((size*100)/_infoKey.minSize));
-                        _infoKey.localSizeDiff.push(size-_infoKey.minSize);
+                        _infoKey.localeSizeDiffPercent.push(((size*100)/_infoKey.minSize));
+                        _infoKey.localeSizeDiff.push(size-_infoKey.minSize);
 
                         if(_infoKey.maxDiff < (size-_infoKey.minSize)){
                             _infoKey.maxDiff=size-_infoKey.minSize;
                         }
                     }else{
-                        _infoKey.localSizeDiffPercent.push(0);
-                        _infoKey.localSizeDiff.push(0);
+                        _infoKey.localeSizeDiffPercent.push(0);
+                        _infoKey.localeSizeDiff.push(0);
                     }
                 });
                 infoKeys.push(_infoKey)
@@ -216,7 +216,7 @@ module.exports = function () {
             data: {
                 time: grunt.template.today("yyyy-mm-dd HH:mm:ss"),
                 infoKeys: infoKeys,
-                locals: options.locals
+                locales: options.locales
 
             }
         });

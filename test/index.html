@@ -18,8 +18,8 @@
     <div>
         <div id="key4"></div>
     </div>
-    <button onclick="i18n.changeLocal('UA')">UA</button>
-    <button onclick="i18n.changeLocal('EN')">EN</button>
+    <button onclick="i18n.changeLocale('UA')">UA</button>
+    <button onclick="i18n.changeLocale('EN')">EN</button>
 
 </div>
 <script src="../dist/I18n.js" type="application/javascript"></script>
@@ -34,13 +34,13 @@
            document.getElementById('loadBundle2').innerText = 'Bundle2 translations load';
            document.getElementById('key4').innerText=i18n.get("test.test.test.bundle2");
        };
-    i18n.on('changeLocal',function(){
+    i18n.on('changeLocale',function(){
         callbackLoadBundle1();
         callbackLoadBundle2();
     });
     i18n.setProperty({
-        local: 'EN',
-        localDefault: 'EN'
+        locale: 'EN',
+        localeDefault: 'EN'
     });
     i18n.load('translations/bundle1.min', callbackLoadBundle1);
     loadBundle2 = function () {
