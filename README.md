@@ -110,7 +110,7 @@ build file:
     i18n.setProperty({
         local: 'EN', // location on
         localDefault: 'EN', //local on default if key of main local is empty
-        versionJson: 1.1.1 // versionJson add to url params load file translation
+        versionJson: '1.1.1' // versionJson add to url params load file translation
     });
 ```
 
