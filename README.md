@@ -14,7 +14,7 @@ I18n
   $ git clone https://github.com/konstantin-nizhinskiy/I18n.git;
 ```
 
-## Build json trunslation
+## Build json translation
 
 ### Getting Started
    
