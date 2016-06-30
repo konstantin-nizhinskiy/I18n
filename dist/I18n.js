@@ -1,8 +1,8 @@
 /*
 name: nks-i18n
-version: 0.9.2
+version: 0.9.4
 author: Konstantin Nizhinskiy
-date: 2016-06-29 19:06:53 
+date: 2016-06-30 10:06:15 
 
 */
 (function (root, factory) {

@@ -75,7 +75,7 @@ module.exports = function () {
             '\n' +
             '### All keys \n' +
             ' Keys                        | <%  locales.forEach(function(row){ %> <%= row %> | <% }) %>\n' +
-            '-----------------------------|-------------\n' +
+            '-----------------------------|------<%  locales.forEach(function(row){ %>----|<% })%>\n' +
             '<%  infoKeys.forEach(function(keyRow){ %>' +
             ' <%= keyRow.key %> |<%  keyRow.localeProperty.forEach(function(row){ %> <%= row %> | <% }) %>\n' +
             '<% }) %>'+
@@ -83,7 +83,7 @@ module.exports = function () {
             '\n' +
             '### All keys value \n' +
             ' Keys                        | <%  locales.forEach(function(row){ %> <%= row %> | <% }) %>\n' +
-            '-----------------------------|-------------\n' +
+            '-----------------------------|------<%  locales.forEach(function(row){ %>----|<% })%>\n' +
             '<%  infoKeys.forEach(function(keyRow){ %>' +
             ' <%= keyRow.key %> |<%  keyRow.localeValue.forEach(function(row){ %> <%= row %> | <% }) %>\n' +
             '<% }) %>'+
@@ -163,7 +163,7 @@ module.exports = function () {
             '\n' +
             '### All keys \n' +
             ' Keys                        | <%  locales.forEach(function(row){ %> <%= row %> | <% }) %> Min size / Max size / Max diff |\n' +
-            '-----------------------------|-------------\n' +
+            '-----------------------------|----<%  locales.forEach(function(row){ %>--|--<% }) %>--|\n' +
             '<%  infoKeys.forEach(function(keyRow){ %>' +
             ' <%= keyRow.key %> |<%  keyRow.localeSize.forEach(function(row,key){ %> <%= row %> / <%= keyRow.localeSizeDiff[key] %> (<%= keyRow.localeSizeDiffPercent[key] %> %) | <% }) %> <%= keyRow.minSize %> / <%= keyRow.maxSize %> / <%= keyRow.maxDiff %> |\n' +
             '<% }) %>'+

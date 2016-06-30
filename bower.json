@@ -1,7 +1,7 @@
 {
   "name": "nks-i18n",
   "description": "",
-  "version":"0.9.3",
+  "version":"0.9.4",
   "main": "",
   "authors": [
     "Konstantin Nizhinskiy"
@@ -26,6 +26,8 @@
     "bower_components",
     "test",
     "tasks",
+    "package.json",
+    "Gruntfile.js",
     "tests"
   ]
 }
