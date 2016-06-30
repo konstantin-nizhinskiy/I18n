@@ -1,8 +1,8 @@
 /*
 name: nks-i18n
-version: 0.9.4
+version: 0.9.5
 author: Konstantin Nizhinskiy
-date: 2016-06-30 10:06:15 
+date: 2016-06-30 16:06:16 
 
 */
 (function (root, factory) {
@@ -235,6 +235,41 @@ I18n.prototype.load=function(url,callback){
     if('undefined'===typeof _bundleFile[url]){
         _bundleFile[url]={};
     }
+    /**
+     *  load default locale
+     */
+    if('undefined'=== typeof _bundleFile[url][_localeDefault]){
+        var xhr2 = new XMLHttpRequest(),
+            _this = this;
+        xhr2.open('GET', url + '.' + _localeDefault.toLowerCase() + '.json?'+this._versionJson, true);
+        xhr2.send();
+
+        xhr2.onreadystatechange = function () {
+
+            if (xhr2.readyState != 4) return;
+            if (xhr2.status != 200) {
+                _this.trigger('error', 'error:load', xhr2.statusText, xhr2.status, xhr2);
+                _this.trigger('error:load', xhr2.statusText, xhr2.status, xhr2);
+            } else {
+                var _json=JSON.parse(xhr2.responseText);
+                _bundleFile[url][_localeDefault] = true;
+                if('undefined'===typeof _translations[_localeDefault]){
+                    _translations[_localeDefault]=_json;
+                }else{
+                    for (var key in _json){
+                        if(!_translations[_localeDefault][key]) {
+                            _translations[_localeDefault][key] = _json[key];
+                        }
+                    }
+                }
+
+            }
+
+        };
+    }
+    /**
+     * load active locale
+     */
     if('undefined'=== typeof _bundleFile[url][this.getLocale()]) {
         var xhr = new XMLHttpRequest(),
             _this = this;
