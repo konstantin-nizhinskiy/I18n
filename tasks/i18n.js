@@ -8,8 +8,8 @@
 'use strict';
 
 var chalk = require ( 'chalk'),
-    buildInfo=require ('./BuildInfo');
-
+    buildInfo=require ('./BuildInfo'),
+    allKeys={};
 module.exports = function ( grunt ) {
 
 
@@ -27,7 +27,6 @@ module.exports = function ( grunt ) {
 
 
         var dirTmp='bak/'+grunt.template.today("yyyymmdd_HHmmss")+'/',
-            allKeys={},
             allKeysFiles={},
             bundleKeysFiles={},
             cacheAllKeys={};

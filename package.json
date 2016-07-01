@@ -2,7 +2,7 @@
   "name": "grunt-nks-i18n",
   "description":"Builder translate you project",
   "license": "MIT",
-  "version": "0.9.5",
+  "version": "0.9.5.1",
   "author": "Konstantin Nizhinskiy",
   "repository": {
     "type": "git",
