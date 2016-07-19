@@ -9,38 +9,57 @@
 
 var chalk = require ( 'chalk'),
     buildInfo=require ('./BuildInfo'),
-    allKeys={};
+    fileTranslation=require ('./FileTranslation'),
+    allKeys={},
+    bundleKeysFiles={},
+    _allKeysFiles={};
+
 module.exports = function ( grunt ) {
 
 
     grunt.registerMultiTask( 'i18n', 'Adds a banner or a footer to a file', function () {
         // Set up defaults for the options hash
         var options = this.options({
-            type: 'js',
+            typeTranslation: 'json',
             locales:['en'],
             cache:true,
+            cacheFile:false,
+            bundleFile:true,
             cacheDir:'cache/i18n/',
             buildDoc:true,
+            loadJsTranslation:
+                "if (typeof define === 'function' && define.amd) {"+
+                    "define(['i18n'], function (i18n) {"+
+                        "return i18n.setTranslation(factory())"+
+                    "})"+
+                "} else {"+
+                    "i18n.setTranslation(factory());"+
+                "}",
             reg:'(i18n\\.get\\([ ]{0,}[\'"])([A-Za-z.]+)([\'"])'
 
         });
 
+        var dirTmp,
+            bundleFile='bundleFile/',
 
-        var dirTmp='bak/'+grunt.template.today("yyyymmdd_HHmmss")+'/',
-            allKeysFiles={},
-            bundleKeysFiles={},
             cacheAllKeys={};
+
+        if(options.cacheFile===true) {
+            dirTmp = 'bak/' + grunt.template.today("yyyymmdd_HHmmss") + '/';
+        }
 
         if(options.cache===true) {
             /**
              * Cache all keys project
              */
             options.locales.forEach(function (locale) {
-                cacheAllKeys[locale] = {};
-                if (grunt.file.isFile(options.cacheDir + 'cacheAllKeys.' + locale + '.json')) {
-                    cacheAllKeys[locale] = grunt.file.readJSON(options.cacheDir + 'cacheAllKeys.' + locale + '.json');
-                }
+                // cacheAllKeys[locale] = {};
+                // if (grunt.file.isFile(options.cacheDir + 'cacheAllKeys.' + locale + '.json')) {
+                //  cacheAllKeys[locale] = grunt.file.readJSON(options.cacheDir + 'cacheAllKeys.' + locale + '.json');
+                // }
+                cacheAllKeys[locale]=fileTranslation(options).get(options.cacheDir + 'cacheAllKeys.' + locale );
             });
+
         }
 
         /**
@@ -57,11 +76,14 @@ module.exports = function ( grunt ) {
                         myArray;
                     while ((myArray = reg.exec(fileContents)) !== null) {
                         keys.push(myArray[2]);
-                        if('undefined'===typeof allKeysFiles[myArray[2]]){
-                            allKeysFiles[myArray[2]]=[];
+                        if('undefined'===typeof _allKeysFiles[myArray[2]]){
+                            _allKeysFiles[myArray[2]]={
+                                files:[],
+                                value:{}
+                            };
                         }
-                        if(allKeysFiles[myArray[2]].indexOf(src)<0){
-                            allKeysFiles[myArray[2]].push(src);
+                        if(_allKeysFiles[myArray[2]].files.indexOf(src)<0){
+                            _allKeysFiles[myArray[2]].files.push(src);
                         }
 
                     }
@@ -69,22 +91,25 @@ module.exports = function ( grunt ) {
                 }
             });
 
-
-            bundleKeysFiles[file.dest]={
-                name:file.dest,
-                locales:[]
-            };
+            if('undefined'=== typeof bundleKeysFiles[file.dest]) {
+                bundleKeysFiles[file.dest] = {
+                    name: file.dest,
+                    locales: []
+                };
+            }
             options.locales.forEach(function(locale){
                 var bundleKeys={},//Keys find in bundle
                     countEmpty= 0,
                     count=0;
-                if ( grunt.file.isFile( file.dest+'.'+locale+'.json' ) ) {
-                    bundleKeysLast=grunt.file.readJSON(file.dest+'.'+locale+'.json');
+                if ( fileTranslation(options).isFile(file.dest+'.'+locale)) {
+                    bundleKeysLast=fileTranslation(options).get(file.dest+'.'+locale);
                     /**
                      * Cache file bundle
                      */
-                    if(options.cache){
-                        grunt.file.copy(file.dest+'.'+locale+'.json', options.cacheDir+dirTmp+file.dest+'.'+locale+'.json')
+                    if(options.cache === true && options.cacheFile === true){
+
+                        fileTranslation(options).copy(file.dest+'.'+locale,options.cacheDir+dirTmp+file.dest+'.'+locale);
+                        //grunt.file.copy(file.dest+'.'+locale+'.json', options.cacheDir+dirTmp+file.dest+'.'+locale+'.json')
                     }
 
                 }
@@ -107,6 +132,9 @@ module.exports = function ( grunt ) {
                             }
 
                         }
+                        if(_allKeysFiles && _allKeysFiles[key]) {
+                            _allKeysFiles[key].value[locale] = bundleKeys[key];
+                        }
                         count++;
                         if(bundleKeys[key]===''){
                             countEmpty++
@@ -114,27 +142,49 @@ module.exports = function ( grunt ) {
                     }
                 });
 
+
                 bundleKeysFiles[file.dest].locales.push({
                     locale:locale,
                     count:count,
                     countEmpty:countEmpty
                 });
-                grunt.file.write(file.dest+'.'+locale+'.json',JSON.stringify(bundleKeys));
+                fileTranslation(options).write(file.dest+'.'+locale,bundleKeys);
+                //grunt.file.write(file.dest+'.'+locale+'.json',JSON.stringify(bundleKeys));
 
             });
 
 
 
         });
-
         options.locales.forEach(function(locale){
-            grunt.file.write(options.cacheDir + 'cacheAllKeys.' + locale + '.json',JSON.stringify(allKeys[locale]||{}));
+            if(options.bundleFile===true){
+                var _files={};
+                for(var key in _allKeysFiles){
+                    //_file[]
+
+                    _allKeysFiles[key].files.forEach(function(fileRow){
+                        if('undefined' === typeof _files[fileRow]){
+                            _files[fileRow]={}
+                        }
+                        _files[fileRow][key]=_allKeysFiles[key].value[locale];
+                    });
+
+                }
+
+                for(var fileRow in _files){
+                    //grunt.file.write(options.cacheDir +bundleFile + fileRow +'/'+ locale + '.json',JSON.stringify(_files[fileRow]||{}));
+                    fileTranslation(options).write(options.cacheDir +bundleFile + fileRow +'/'+ locale,_files[fileRow]);
+                }
+            }
+
+            fileTranslation(options).write(options.cacheDir + 'cacheAllKeys.' + locale,allKeys[locale]);
+            //grunt.file.write(options.cacheDir + 'cacheAllKeys.' + locale + '.json',JSON.stringify(allKeys[locale]||{}));
         });
         if(options.buildDoc===true) {
             buildInfo().infoBuild(options, bundleKeysFiles, allKeys);
             buildInfo().allKeysBuild(options, bundleKeysFiles, allKeys);
             buildInfo().allKeysSizeBuild(options, bundleKeysFiles, allKeys);
-            buildInfo().allKeysFileBuild(options, allKeysFiles);
+            buildInfo().allKeysFileBuild(options, _allKeysFiles);
         }
         grunt.log.writeln( chalk.green( '\u221A' ) + ' grunt-nks-i18n completed successfully' );
 

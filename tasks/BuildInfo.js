@@ -136,7 +136,7 @@ module.exports = function () {
             '### All keys \n' +
             '<% for(var key in allKeysFiles){ %>' +
             ' * <%= key %> \n' +
-            '<%  allKeysFiles[key].forEach(function(file){ %>' +
+            '<%  allKeysFiles[key].files.forEach(function(file){ %>' +
             '       * <%= file %> \n' +
             '<% }) %>' +
             '<% } %>'+

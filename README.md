@@ -49,6 +49,12 @@ Default: `true`
 
 Cache ald bundle json file before build new. Save in one cache file all keys, value 
 
+#### cacheFile
+Type: `Boolean`  
+Default: `true`
+
+On/off cache bundle file translation
+
 #### cacheDir
 Type: `String`  
 Default: `cache/i18n/`
@@ -59,7 +65,33 @@ Cache directory
 Type: `Boolean`  
 Default: `true`
 
-Create information file after build translation in directory(options.cacheDir+'doc/')
+#### bundleFile
+Type: `Boolean`  
+Default: `true`
+
+Saving a file translate where he was taken and placed in the cache
+
+#### typeTranslation
+Type: `String`
+Default: `json`
+
+Type build translation file (json,yml,js)
+
+#### loadJsTranslation:
+Type: `String`
+Default: 
+```js
+    if (typeof define === 'function' && define.amd) {
+        define(['i18n'], function (i18n) {
+            return i18n.setTranslation(factory())
+        })
+    } else {
+        i18n.setTranslation(factory());
+    }
+```
+
+Load function translation if you select type typeTranslation=='js'
+
 *file:*
 
  * AllKeys.md - All keys translation
