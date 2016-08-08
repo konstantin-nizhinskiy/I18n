@@ -1,7 +1,7 @@
 {
   "name": "nks-i18n",
   "description": "Translations",
-  "version":"0.9.6",
+  "version":"0.9.7",
   "main": "",
   "authors": [
     "Konstantin Nizhinskiy"
@@ -12,9 +12,6 @@
     "grunt-i18n",
     "build-i18n"
   ],
-  "dependencies": {
-    "yamljs":"^0.2.8"
-  },
   "license": "MIT",
   "homepage": "https://github.com/konstantin-nizhinskiy/I18n",
   "ignore": [

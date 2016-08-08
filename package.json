@@ -2,7 +2,7 @@
   "name": "grunt-nks-i18n",
   "description":"Builder translate you project",
   "license": "MIT",
-  "version": "0.9.6",
+  "version": "0.9.7",
   "author": "Konstantin Nizhinskiy",
   "repository": {
     "type": "git",
@@ -32,6 +32,8 @@
     "grunt-contrib-nodeunit": "~0.3",
     "grunt-contrib-uglify": "~0.4",
     "grunt-tasks": "^1.0.0",
-    "time-grunt": "~0.3"
+    "time-grunt": "~0.3",
+    "yamljs":"^0.2.8"
+
   }
 }
