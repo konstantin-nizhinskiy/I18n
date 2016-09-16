@@ -1,8 +1,8 @@
 /*
 name: nks-i18n
-version: 0.9.7
+version: 0.9.8
 author: Konstantin Nizhinskiy
-date: 2016-08-08 15:08:23 
+date: 2016-09-16 18:09:34 
 
 */
 (function (root, factory) {
@@ -332,7 +332,7 @@ I18n.prototype.setProperty=function(params){
     if(params.locale){
         _locale=params.locale
     }
-    if(params.localDefault){
+    if(params.localeDefault){
         _localeDefault=params.localeDefault;
     }
     if(params.versionJson){

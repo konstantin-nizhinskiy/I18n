@@ -10,7 +10,7 @@ I18n.prototype.setProperty=function(params){
     if(params.locale){
         _locale=params.locale
     }
-    if(params.localDefault){
+    if(params.localeDefault){
         _localeDefault=params.localeDefault;
     }
     if(params.versionJson){
