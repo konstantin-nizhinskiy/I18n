@@ -7,7 +7,8 @@ module.exports = function (options) {
     var _write=function(file,obj){
         switch (options.typeTranslation){
             case 'json':
-                grunt.file.write(file+'.json',JSON.stringify(obj||{}));
+                obj=obj||{};
+                grunt.file.write(file+'.json',JSON.stringify(obj, "", 4));
                 break;
             case 'yml':
                 grunt.file.write(file+'.yml',YAML.stringify(obj||{}));

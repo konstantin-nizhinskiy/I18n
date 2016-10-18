@@ -2,7 +2,7 @@
 name: nks-i18n
 version: 0.9.8
 author: Konstantin Nizhinskiy
-date: 2016-09-16 18:09:34 
+date: 2016-10-18 15:10:55 
 
 */
 (function (root, factory) {
