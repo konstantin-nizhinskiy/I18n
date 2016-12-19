@@ -3,11 +3,13 @@
  *
  * @param key {string} - Key translation
  * @param params {object} - Params merge with translation messengers
+ * @param options {object} - options translation
+ * @param options.defaultValue {string} - default value translation (#8)
  * @event error - Not fount key translation  [this.trigger('error','error:translation:key',key,this.getLocale());]
  * @event error:translation:key - Not fount key translation  [this.trigger('error',key,this.getLocale());]
  * @return {string}
  */
-I18n.prototype.get=function(key,params){
+I18n.prototype.get=function(key,params,options){
     var _text;
     if(_translations[this.getLocale()] && _translations[this.getLocale()][key]){
         _text=_translations[this.getLocale()][key];
@@ -29,6 +31,12 @@ I18n.prototype.get=function(key,params){
             }
             return _text;
         }else{
+            if(options && options.defaultValue){
+                return options.defaultValue
+            }
+            if(_defaultValue){
+                return _defaultValue;
+            }
             return key;
         }
     }

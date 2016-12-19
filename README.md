@@ -1,13 +1,14 @@
 I18n
 ====
  * [download](#download)
+ * [Loader supports](#loader-supports)
  * [config](#config)
  * [build json translation](#build-json-translation)
  * [methods](#methods)
  * [events](#events)
  * [example](#example)
  
-
+    
 ## Download
 ```sh
   $ bower install nks-i18n;
@@ -137,28 +138,33 @@ build file:
  * bundle2.min.en.json
  * bundle2.min.ua.json
 
+## Loader supports
+    * AMD
+    * CommonJS
+
 ## Config
 ```js
     i18n.setProperty({
         locale: 'EN', // location on
         localeDefault: 'EN', //locale on default if key of main locale is empty
-        versionJson: '1.1.1' // versionJson add to url params load file translation
+        versionJson: '1.1.1', // versionJson add to url params load file translation
+        defaultValue: '' // You can set default value for translated
     });
 ```
 
 
 ## Methods
- Method               | Arguments         |  info           
-----------------------|-------------------|------------------------
- changeLocale         | locale            | Change locale
- get                  | key, params       | Get translations
- getLocale            |                   | Get locale now
- load                 | url, [callback]   | Load translations JSON
- setProperty          | params            | Set property i18n
- on                   | event, callback   | Bind event callback
- off                  | event, [callback] | Unbind event callback
- once                 | event, callback   | Bind once event callback
- trigger              | event, param1,... | Trigger event
+ Method               | Arguments                  |  info           
+----------------------|----------------------------|------------------------
+ changeLocale         | locale                     | Change locale
+ get                  | key, params, [option]      | Get translations
+ getLocale            |                            | Get locale now
+ load                 | url, [callback]            | Load translations JSON
+ setProperty          | params                     | Set property i18n
+ on                   | event, callback            | Bind event callback
+ off                  | event, [callback]          | Unbind event callback
+ once                 | event, callback            | Bind once event callback
+ trigger              | event, param1,...          | Trigger event
 
 
 ## Events
@@ -184,6 +190,8 @@ error                 | type, *                 | All error event error:*
             console.log(i18n.get("test.test.test")); // Test test test
             console.log(i18n.get("count.books", {count: 20}));  // 20 books
             console.log(i18n.get("book.name.pages.number", {name: 'JS', number: 201})); // Book JS page 201
+            console.log(i18n.get("test.test.test1")); // test.test.test1
+            console.log(i18n.get("test.test.test1",{},{defaultValue:'my value'})); // my value
         };
         i18n.load('translations/bundle1.min', demoFunction );
         i18n.on('changeLocale',function(){

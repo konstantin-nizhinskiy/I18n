@@ -1,8 +1,12 @@
 (function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('i18n', [], function () {
-            return root.i18n = factory()
-        })
+    if(typeof define === "function" && define.amd) {
+        // the AMD loader.
+        define([], function(){
+            return (root.i18n = factory());
+        });
+    } else if(typeof module === "object" && module.exports) {
+        // the CommonJS loader.
+        module.exports = (root.i18n = factory());
     } else {
         root.i18n = factory();
     }
@@ -30,6 +34,12 @@
          * @private
          */
         _localeDefault='UA',
+        /**
+         *
+         * @type {string} - default value translation
+         * @private
+         */
+        _defaultValue='',
         /**
          *
          * @type {object} - translations object load

@@ -1,15 +1,19 @@
 /*
 name: nks-i18n
-version: 0.9.8
+version: 1.1.0
 author: Konstantin Nizhinskiy
-date: 2016-10-18 15:10:55 
+date: 2016-12-19 12:12:19 
 
 */
 (function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('i18n', [], function () {
-            return root.i18n = factory()
-        })
+    if(typeof define === "function" && define.amd) {
+        // the AMD loader.
+        define([], function(){
+            return (root.i18n = factory());
+        });
+    } else if(typeof module === "object" && module.exports) {
+        // the CommonJS loader.
+        module.exports = (root.i18n = factory());
     } else {
         root.i18n = factory();
     }
@@ -37,6 +41,12 @@ date: 2016-10-18 15:10:55
          * @private
          */
         _localeDefault='UA',
+        /**
+         *
+         * @type {string} - default value translation
+         * @private
+         */
+        _defaultValue='',
         /**
          *
          * @type {object} - translations object load
@@ -183,11 +193,13 @@ I18n.prototype.trigger=function(event){
  *
  * @param key {string} - Key translation
  * @param params {object} - Params merge with translation messengers
+ * @param options {object} - options translation
+ * @param options.defaultValue {string} - default value translation (#8)
  * @event error - Not fount key translation  [this.trigger('error','error:translation:key',key,this.getLocale());]
  * @event error:translation:key - Not fount key translation  [this.trigger('error',key,this.getLocale());]
  * @return {string}
  */
-I18n.prototype.get=function(key,params){
+I18n.prototype.get=function(key,params,options){
     var _text;
     if(_translations[this.getLocale()] && _translations[this.getLocale()][key]){
         _text=_translations[this.getLocale()][key];
@@ -209,6 +221,12 @@ I18n.prototype.get=function(key,params){
             }
             return _text;
         }else{
+            if(options && options.defaultValue){
+                return options.defaultValue
+            }
+            if(_defaultValue){
+                return _defaultValue;
+            }
             return key;
         }
     }
@@ -327,6 +345,7 @@ var _setLocale=function(locale){
  * @param params.locale {string} location on
  * @param params.localeDefault {string} locale on default if key of main locale is empty
  * @param params.versionJson {string} versionJson add to url params load file translation
+ * @param params.defaultValue {string} default value translation (#8)
  */
 I18n.prototype.setProperty=function(params){
     if(params.locale){
@@ -337,6 +356,9 @@ I18n.prototype.setProperty=function(params){
     }
     if(params.versionJson){
         this._versionJson=params.versionJson;
+    }
+    if(params.defaultValue){
+        _defaultValue=params.defaultValue;
     }
 
 };
