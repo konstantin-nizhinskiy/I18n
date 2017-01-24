@@ -17,6 +17,8 @@
     "LICENSE-MIT"
   ],
   "keywords": [
+    "translate",
+    "web-translate",
     "gruntplugin",
     "i18n",
     "grunt-i18n"
