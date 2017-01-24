@@ -1,8 +1,8 @@
 /*
 name: nks-i18n
-version: 1.1.0
+version: 1.2.0
 author: Konstantin Nizhinskiy
-date: 2016-12-19 12:12:19 
+date: 2017-01-24 22:01:26 
 
 */
 (function (root, factory) {
@@ -256,7 +256,7 @@ I18n.prototype.load=function(url,callback){
     /**
      *  load default locale
      */
-    if('undefined'=== typeof _bundleFile[url][_localeDefault]){
+    if('undefined'=== typeof _bundleFile[url][_localeDefault] && this.getLocale()!==_localeDefault){
         var xhr2 = new XMLHttpRequest(),
             _this = this;
         xhr2.open('GET', url + '.' + _localeDefault.toLowerCase() + '.json?'+this._versionJson, true);

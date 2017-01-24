@@ -15,7 +15,7 @@ I18n.prototype.load=function(url,callback){
     /**
      *  load default locale
      */
-    if('undefined'=== typeof _bundleFile[url][_localeDefault]){
+    if('undefined'=== typeof _bundleFile[url][_localeDefault] && this.getLocale()!==_localeDefault){
         var xhr2 = new XMLHttpRequest(),
             _this = this;
         xhr2.open('GET', url + '.' + _localeDefault.toLowerCase() + '.json?'+this._versionJson, true);
