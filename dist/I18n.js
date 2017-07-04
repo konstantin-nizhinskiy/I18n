@@ -1,8 +1,8 @@
 /*
 name: nks-i18n
-version: 1.2.0
+version: 1.3.0
 author: Konstantin Nizhinskiy
-date: 2017-01-24 22:01:26 
+date: 2017-07-04 15:07:20 
 
 */
 (function (root, factory) {
@@ -59,6 +59,12 @@ date: 2017-01-24 22:01:26
          * @private
          */
         _bundleFile = {};
+        /**
+         *
+         * @type {object} - Module prefix url
+         * @private
+         */
+        _modulePrefix = {};
     // 
 /**
  * Change locale
@@ -244,12 +250,17 @@ I18n.prototype.getLocale=function(){
  *
  * @param url {string} - url json file translations
  * @param callback {function} - callback function
+ * @param options {object} - Dop options
+ * @param options.modulePrefix {string} - You can set prefix url
  * @event load - load file json [this.trigger('load',url,{json}])]
  * @event error - error load json [this.trigger('error', 'error:load', xhr.statusText, xhr.status, xhr)]
  * @event error:load - error load json [this.trigger('error:load', xhr.statusText, xhr.status, xhr)]
  */
-I18n.prototype.load=function(url,callback){
-
+I18n.prototype.load=function(url,callback,options){
+    options=options||{};
+    if(options.modulePrefix && _modulePrefix[options.modulePrefix]){
+        url=_modulePrefix[options.modulePrefix]+url;
+    }
     if('undefined'===typeof _bundleFile[url]){
         _bundleFile[url]={};
     }
@@ -346,6 +357,7 @@ var _setLocale=function(locale){
  * @param params.localeDefault {string} locale on default if key of main locale is empty
  * @param params.versionJson {string} versionJson add to url params load file translation
  * @param params.defaultValue {string} default value translation (#8)
+ * @param params.modulePrefix {string} Prefix url to module
  */
 I18n.prototype.setProperty=function(params){
     if(params.locale){
@@ -359,6 +371,9 @@ I18n.prototype.setProperty=function(params){
     }
     if(params.defaultValue){
         _defaultValue=params.defaultValue;
+    }
+    if(params.modulePrefix){
+        _modulePrefix=params.modulePrefix;
     }
 
 };

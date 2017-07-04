@@ -6,6 +6,7 @@
  * @param params.localeDefault {string} locale on default if key of main locale is empty
  * @param params.versionJson {string} versionJson add to url params load file translation
  * @param params.defaultValue {string} default value translation (#8)
+ * @param params.modulePrefix {string} Prefix url to module
  */
 I18n.prototype.setProperty=function(params){
     if(params.locale){
@@ -19,6 +20,9 @@ I18n.prototype.setProperty=function(params){
     }
     if(params.defaultValue){
         _defaultValue=params.defaultValue;
+    }
+    if(params.modulePrefix){
+        _modulePrefix=params.modulePrefix;
     }
 
 };

@@ -52,6 +52,12 @@
          * @private
          */
         _bundleFile = {};
+        /**
+         *
+         * @type {object} - Module prefix url
+         * @private
+         */
+        _modulePrefix = {};
     // <%= prototype %>
     return new I18n();
 }));

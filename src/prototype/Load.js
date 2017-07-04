@@ -3,12 +3,17 @@
  *
  * @param url {string} - url json file translations
  * @param callback {function} - callback function
+ * @param options {object} - Dop options
+ * @param options.modulePrefix {string} - You can set prefix url
  * @event load - load file json [this.trigger('load',url,{json}])]
  * @event error - error load json [this.trigger('error', 'error:load', xhr.statusText, xhr.status, xhr)]
  * @event error:load - error load json [this.trigger('error:load', xhr.statusText, xhr.status, xhr)]
  */
-I18n.prototype.load=function(url,callback){
-
+I18n.prototype.load=function(url,callback,options){
+    options=options||{};
+    if(options.modulePrefix && _modulePrefix[options.modulePrefix]){
+        url=_modulePrefix[options.modulePrefix]+url;
+    }
     if('undefined'===typeof _bundleFile[url]){
         _bundleFile[url]={};
     }
