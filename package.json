@@ -12,6 +12,7 @@
     "url": "https://github.com/konstantin-nizhinskiy/I18n/issues"
   },
   "files": [
+    "dist",
     "tasks",
     "History.md",
     "LICENSE-MIT"
