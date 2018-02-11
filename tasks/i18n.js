@@ -6,7 +6,34 @@
  */
 
 'use strict';
+String.prototype.replaceAll = function( token, newToken, ignoreCase ) {
+    var _token;
+    var str = this + "";
+    var i = -1;
 
+    if ( typeof token === "string" ) {
+
+        if ( ignoreCase ) {
+
+            _token = token.toLowerCase();
+
+            while( (
+                i = str.toLowerCase().indexOf(
+                    _token, i >= 0 ? i + newToken.length : 0
+                ) ) !== -1
+                ) {
+                str = str.substring( 0, i ) +
+                    newToken +
+                    str.substring( i + token.length );
+            }
+
+        } else {
+            return this.split( token ).join( newToken );
+        }
+
+    }
+    return str;
+};
 var chalk = require ( 'chalk'),
     buildInfo=require ('./BuildInfo'),
     fileTranslation=require ('./FileTranslation'),
@@ -23,25 +50,27 @@ module.exports = function ( grunt ) {
             typeTranslation: 'json',
             locales:['en'],
             cache:true,
+            template_build:false,
+            template_build_dir:{},
             cacheFile:false,
             bundleFile:true,
             cacheDir:'cache/i18n/',
             buildDoc:true,
             loadJsTranslation:
-                "if (typeof define === 'function' && define.amd) {"+
-                    "define(['i18n'], function (i18n) {"+
-                        "return i18n.setTranslation(factory())"+
-                    "})"+
-                "} else {"+
-                    "i18n.setTranslation(factory());"+
-                "}",
+            "if (typeof define === 'function' && define.amd) {"+
+            "define(['i18n'], function (i18n) {"+
+            "return i18n.setTranslation(factory())"+
+            "})"+
+            "} else {"+
+            "i18n.setTranslation(factory());"+
+            "}",
             reg:'(i18n\\.get\\([ ]{0,}[\'"])([A-Za-z.]+)([\'"])'
 
         });
 
         var dirTmp,
             bundleFile='bundleFile/',
-
+            template_build_file={},
             cacheAllKeys={};
 
         if(options.cacheFile===true) {
@@ -53,28 +82,37 @@ module.exports = function ( grunt ) {
              * Cache all keys project
              */
             options.locales.forEach(function (locale) {
-                // cacheAllKeys[locale] = {};
-                // if (grunt.file.isFile(options.cacheDir + 'cacheAllKeys.' + locale + '.json')) {
-                //  cacheAllKeys[locale] = grunt.file.readJSON(options.cacheDir + 'cacheAllKeys.' + locale + '.json');
-                // }
                 cacheAllKeys[locale]=fileTranslation(options).get(options.cacheDir + 'cacheAllKeys.' + locale );
             });
 
         }
-
         /**
          * Find in all files translation keys
          */
         this.files.forEach( function ( file ) {
             var bundleKeysLast={},
                 keys=[];//Key last find and already save in json
-
+            if(options.template_build==true){
+                if(!template_build_file[file.dest]){
+                    template_build_file[file.dest]={
+                        keys:{},
+                        file_name:{}
+                    }
+                }
+            }
             file.src.forEach( function ( src ) {
                 if ( grunt.file.isFile( src ) ) {
                     var fileContents = grunt.file.read( src),
                         reg= new RegExp(options.reg,'ig'),
                         myArray;
+                    if(options.template_build==true){
+                        template_build_file[file.dest].file_name[src.split("/").pop()]=fileContents;
+                    }
+
                     while ((myArray = reg.exec(fileContents)) !== null) {
+                        if(options.template_build==true){
+                            template_build_file[file.dest].keys[myArray[2]]=myArray.input.substring(myArray.index,myArray.input.indexOf(")",myArray.index)+1)
+                        }
                         keys.push(myArray[2]);
                         if('undefined'===typeof _allKeysFiles[myArray[2]]){
                             _allKeysFiles[myArray[2]]={
@@ -90,7 +128,6 @@ module.exports = function ( grunt ) {
 
                 }
             });
-
             if('undefined'=== typeof bundleKeysFiles[file.dest]) {
                 bundleKeysFiles[file.dest] = {
                     name: file.dest,
@@ -109,7 +146,6 @@ module.exports = function ( grunt ) {
                     if(options.cache === true && options.cacheFile === true){
 
                         fileTranslation(options).copy(file.dest+'.'+locale,options.cacheDir+dirTmp+file.dest+'.'+locale);
-                        //grunt.file.copy(file.dest+'.'+locale+'.json', options.cacheDir+dirTmp+file.dest+'.'+locale+'.json')
                     }
 
                 }
@@ -125,12 +161,11 @@ module.exports = function ( grunt ) {
                         }
                         if (options.cache === true) {
                             if ('undefined' === typeof allKeys[locale]) {
-                                allKeys[locale] = {}
+                                allKeys[locale] = cacheAllKeys[locale]||{}
                             }
-                            if ('undefined' === typeof allKeys[locale][key] || !allKeys[locale][key]) {
+                            if ('undefined' === typeof allKeys[locale][key] || bundleKeys[key] || !allKeys[locale][key]) {
                                 allKeys[locale][key] = bundleKeys[key];
                             }
-
                         }
                         if(_allKeysFiles && _allKeysFiles[key]) {
                             _allKeysFiles[key].value[locale] = bundleKeys[key];
@@ -142,16 +177,13 @@ module.exports = function ( grunt ) {
                     }
                 });
 
-
                 bundleKeysFiles[file.dest].locales.push({
                     locale:locale,
                     count:count,
                     countEmpty:countEmpty
                 });
                 fileTranslation(options).write(file.dest+'.'+locale,bundleKeys);
-                //grunt.file.write(file.dest+'.'+locale+'.json',JSON.stringify(bundleKeys));
-
-            });
+               });
 
 
 
@@ -172,13 +204,30 @@ module.exports = function ( grunt ) {
                 }
 
                 for(var fileRow in _files){
-                    //grunt.file.write(options.cacheDir +bundleFile + fileRow +'/'+ locale + '.json',JSON.stringify(_files[fileRow]||{}));
                     fileTranslation(options).write(options.cacheDir +bundleFile + fileRow +'/'+ locale,_files[fileRow]);
                 }
             }
-
             fileTranslation(options).write(options.cacheDir + 'cacheAllKeys.' + locale,allKeys[locale]);
-            //grunt.file.write(options.cacheDir + 'cacheAllKeys.' + locale + '.json',JSON.stringify(allKeys[locale]||{}));
+            if(options.template_build==true){
+
+                for (var t_key in template_build_file){
+
+                    for(var file_name in template_build_file[t_key].file_name){
+                        var file_content=template_build_file[t_key].file_name[file_name]
+                        for(var file_name_keys in template_build_file[t_key].keys){
+                            file_content=file_content.replaceAll(template_build_file[t_key].keys[file_name_keys],allKeys[locale][file_name_keys]||file_name_keys)
+                        }
+                        if (!options.template_build_dir[t_key]){
+                            console.log("options template_build_dir not you set" ,t_key)
+                            return
+                        }
+                        grunt.file.write(options.template_build_dir[t_key]+"/"+locale+"/"+file_name,file_content);
+
+                    }
+
+                }
+
+            }
         });
         if(options.buildDoc===true) {
             buildInfo().infoBuild(options, bundleKeysFiles, allKeys);
