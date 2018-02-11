@@ -52,6 +52,7 @@ module.exports = function ( grunt ) {
             cache:true,
             template_build:false,
             template_build_dir:{},
+            template_file_local:true,
             cacheFile:false,
             bundleFile:true,
             cacheDir:'cache/i18n/',
@@ -221,7 +222,16 @@ module.exports = function ( grunt ) {
                             console.log("options template_build_dir not you set" ,t_key)
                             return
                         }
-                        grunt.file.write(options.template_build_dir[t_key]+"/"+locale+"/"+file_name,file_content);
+                        if(options.template_file_local){
+                            var file_names=file_name.split("."),
+                                file_type= file_names.pop();
+                            file_names.push(locale);
+                            file_names.push(file_type);
+                            grunt.file.write(options.template_build_dir[t_key]+"/"+locale+"/"+file_names.join("."),file_content);
+                        }else{
+                            grunt.file.write(options.template_build_dir[t_key]+"/"+locale+"/"+file_name,file_content);
+                        }
+
 
                     }
 
