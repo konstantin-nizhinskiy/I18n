@@ -1,8 +1,8 @@
 /*
 name: nks-i18n
-version: 1.3.0
+version: 1.7.0
 author: Konstantin Nizhinskiy
-date: 2017-07-04 15:07:20 
+date: 2018-07-26 13:07:05 
 
 */
 (function (root, factory) {
@@ -257,6 +257,7 @@ I18n.prototype.getLocale=function(){
  * @event error:load - error load json [this.trigger('error:load', xhr.statusText, xhr.status, xhr)]
  */
 I18n.prototype.load=function(url,callback,options){
+    var _last_locale=this.getLocale();
     options=options||{};
     if(options.modulePrefix && _modulePrefix[options.modulePrefix]){
         url=_modulePrefix[options.modulePrefix]+url;
@@ -267,7 +268,7 @@ I18n.prototype.load=function(url,callback,options){
     /**
      *  load default locale
      */
-    if('undefined'=== typeof _bundleFile[url][_localeDefault] && this.getLocale()!==_localeDefault){
+    if('undefined'=== typeof _bundleFile[url][_localeDefault] && _last_locale!==_localeDefault){
         var xhr2 = new XMLHttpRequest(),
             _this = this;
         xhr2.open('GET', url + '.' + _localeDefault.toLowerCase() + '.json?'+this._versionJson, true);
@@ -299,10 +300,10 @@ I18n.prototype.load=function(url,callback,options){
     /**
      * load active locale
      */
-    if('undefined'=== typeof _bundleFile[url][this.getLocale()]) {
+    if('undefined'=== typeof _bundleFile[url][_last_locale]) {
         var xhr = new XMLHttpRequest(),
             _this = this;
-        xhr.open('GET', url + '.' + this.getLocale().toLowerCase() + '.json?'+this._versionJson, true);
+        xhr.open('GET', url + '.' + _last_locale.toLowerCase() + '.json?'+this._versionJson, true);
         xhr.send();
 
         xhr.onreadystatechange = function () {
@@ -316,17 +317,17 @@ I18n.prototype.load=function(url,callback,options){
                 }
             } else {
                 var _json=JSON.parse(xhr.responseText);
-                _bundleFile[url][_this.getLocale()] = true;
-                if('undefined'===typeof _translations[_this.getLocale()]){
-                    _translations[_this.getLocale()]=_json;
+                _bundleFile[url][_last_locale] = true;
+                if('undefined'===typeof _translations[_last_locale]){
+                    _translations[_last_locale]=_json;
                 }else{
                     for (var key in _json){
-                        if(!_translations[_this.getLocale()][key]) {
-                            _translations[_this.getLocale()][key] = _json[key];
+                        if(!_translations[_last_locale][key]) {
+                            _translations[_last_locale][key] = _json[key];
                         }
                     }
                 }
-                _this.trigger('load', url,_bundleFile[url][_this.getLocale()]);
+                _this.trigger('load', url,_bundleFile[url][_last_locale]);
                 if('function'===typeof callback){
                     callback()
                 }
