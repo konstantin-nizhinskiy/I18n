@@ -1,8 +1,8 @@
 {
   "name": "grunt-nks-i18n",
-  "description":"Builder translate you project",
+  "description": "Builder translate you project",
   "license": "MIT",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "author": "Konstantin Nizhinskiy",
   "repository": {
     "type": "git",
@@ -26,18 +26,17 @@
     "grunt-i18n"
   ],
   "dependencies": {
-    "chalk": "^1.1.1"
+    "chalk": "^2.4.2"
   },
-  "main":"tasks/i18n.js",
+  "main": "tasks/i18n.js",
   "devDependencies": {
-    "grunt": "~0.4.4",
+    "grunt": "^1.0",
     "grunt-banner": "^0.5.0",
-    "grunt-contrib-concat": "~0.4",
-    "grunt-contrib-nodeunit": "~0.3",
-    "grunt-contrib-uglify": "~0.4",
+    "grunt-contrib-concat": "^1.0",
+    "grunt-contrib-nodeunit": "^2.0",
+    "grunt-contrib-uglify": "^4.0",
     "grunt-tasks": "^1.0.0",
-    "time-grunt": "~0.3",
-    "yamljs":"^0.2.8"
-
+    "time-grunt": "^2.0.0",
+    "yamljs": "^0.3.0"
   }
 }
