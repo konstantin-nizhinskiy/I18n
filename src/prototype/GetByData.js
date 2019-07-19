@@ -7,7 +7,7 @@
  * @return {string}
  */
 I18n.prototype.getByData=function(params,options){
-    if(params[this.getLocale()]||params[_localeDefault]){
+    if(params && (params[this.getLocale()]||params[_localeDefault])){
         return params[this.getLocale()]||params[_localeDefault]
     }else{
         if(options && options.defaultValue){
