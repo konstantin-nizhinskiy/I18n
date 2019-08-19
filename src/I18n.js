@@ -17,8 +17,8 @@
      */
     var I18n = function () {
             this.setProperty({
-                locale: 'UA',
-                localeDefault: 'UA',
+                locale: 'ua',
+                localeDefault: 'ua',
                 versionJson: +new Date()
             });
         },
@@ -27,13 +27,13 @@
          * @type {string} - locale active now
          * @private
          */
-        _locale='UA',
+        _locale='ua',
         /**
          *
          * @type {string} - default locale active now
          * @private
          */
-        _localeDefault='UA',
+        _localeDefault='ua',
         /**
          *
          * @type {string} - default value translation

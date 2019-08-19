@@ -10,10 +10,10 @@
  */
 I18n.prototype.setProperty=function(params){
     if(params.locale){
-        _locale=params.locale
+        _locale=params.locale.toLowerCase()
     }
     if(params.localeDefault){
-        _localeDefault=params.localeDefault;
+        _localeDefault=params.localeDefault.toLowerCase();
     }
     if(params.versionJson){
         this._versionJson=params.versionJson;
