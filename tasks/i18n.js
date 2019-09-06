@@ -60,10 +60,10 @@ module.exports = function ( grunt ) {
             loadJsTranslation:
             "if (typeof define === 'function' && define.amd) {"+
             "define(['i18n'], function (i18n) {"+
-            "return i18n.setTranslation(factory())"+
+            "return i18n.setTranslation(factory(),locale)"+
             "})"+
             "} else {"+
-            "i18n.setTranslation(factory());"+
+            "i18n.setTranslation(factory(),locale);"+
             "}",
             reg:'(i18n\\.get\\([ ]{0,}[\'"])([A-Za-z.]+)([\'"])'
 
@@ -183,7 +183,7 @@ module.exports = function ( grunt ) {
                     count:count,
                     countEmpty:countEmpty
                 });
-                fileTranslation(options).write(file.dest+'.'+locale,bundleKeys);
+                fileTranslation(options).write(file.dest+'.'+locale,bundleKeys,locale);
                });
 
 
@@ -205,21 +205,21 @@ module.exports = function ( grunt ) {
                 }
 
                 for(var fileRow in _files){
-                    fileTranslation(options).write(options.cacheDir +bundleFile + fileRow +'/'+ locale,_files[fileRow]);
+                    fileTranslation(options).write(options.cacheDir +bundleFile + fileRow +'/'+ locale,_files[fileRow],locale);
                 }
             }
-            fileTranslation(options).write(options.cacheDir + 'cacheAllKeys.' + locale,allKeys[locale]);
+            fileTranslation(options).write(options.cacheDir + 'cacheAllKeys.' + locale,allKeys[locale],locale);
             if(options.template_build==true){
 
                 for (var t_key in template_build_file){
 
                     for(var file_name in template_build_file[t_key].file_name){
-                        var file_content=template_build_file[t_key].file_name[file_name]
+                        var file_content=template_build_file[t_key].file_name[file_name];
                         for(var file_name_keys in template_build_file[t_key].keys){
                             file_content=file_content.replaceAll(template_build_file[t_key].keys[file_name_keys],allKeys[locale][file_name_keys]||file_name_keys)
                         }
                         if (!options.template_build_dir[t_key]){
-                            console.log("options template_build_dir not you set" ,t_key)
+                            console.log("options template_build_dir not you set" ,t_key);
                             return
                         }
                         if(options.template_file_local){

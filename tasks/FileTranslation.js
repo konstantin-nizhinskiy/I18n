@@ -4,7 +4,7 @@ var grunt = require ( 'grunt'),
 
 
 module.exports = function (options) {
-    var _write=function(file,obj){
+    var _write=function(file,obj,locale){
         switch (options.typeTranslation){
             case 'json':
                 obj=obj||{};
@@ -15,9 +15,9 @@ module.exports = function (options) {
                 break;
             case 'js':
                 var tpl,tplContent;
-                tpl= "(function (root, factory) {\n" +
+                tpl= "(function (root,locale, factory) {\n" +
                             "<%= loadJsTranslation %>"+
-                            "\n}(this, function () {"+
+                            "\n}(this,'<%= locale %>', function () {"+
                             "\n//objTranslation\n" +
                             "return <%= objTranslation %>" +
 
@@ -27,6 +27,7 @@ module.exports = function (options) {
                 tplContent=grunt.template.process(tpl,{
                  data:{
                      loadJsTranslation : options.loadJsTranslation,
+                     locale : locale,
                      objTranslation: JSON.stringify(obj||{})
                  }
                  });

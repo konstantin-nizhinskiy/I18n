@@ -1,8 +1,8 @@
 /*
 name: nks-i18n
-version: 1.7.0
+version: 1.9.0
 author: Konstantin Nizhinskiy
-date: 2019-07-24 09:07:19 
+date: 2019-09-06 10:09:10 
 
 */
 (function (root, factory) {
@@ -24,8 +24,8 @@ date: 2019-07-24 09:07:19
      */
     var I18n = function () {
             this.setProperty({
-                locale: 'UA',
-                localeDefault: 'UA',
+                locale: 'ua',
+                localeDefault: 'ua',
                 versionJson: +new Date()
             });
         },
@@ -34,13 +34,13 @@ date: 2019-07-24 09:07:19
          * @type {string} - locale active now
          * @private
          */
-        _locale='UA',
+        _locale='ua',
         /**
          *
          * @type {string} - default locale active now
          * @private
          */
-        _localeDefault='UA',
+        _localeDefault='ua',
         /**
          *
          * @type {string} - default value translation
@@ -70,10 +70,12 @@ date: 2019-07-24 09:07:19
  * Change locale
  *
  * @param locale {string} - locale (UA,EN...)
+ * @param callback {function} - callback on success change locale
  * @event changeLocale - event change locale
  * @return {string}
  */
-I18n.prototype.changeLocale = function (locale) {
+I18n.prototype.changeLocale = function (locale,callback) {
+    locale=locale.toLowerCase();
     var urls = [],_this=this;
     for (var url in _bundleFile) {
         if (_bundleFile[url][locale] !== true) {
@@ -85,6 +87,9 @@ I18n.prototype.changeLocale = function (locale) {
             _callback = function () {
                 _countLoad--;
                 if(_countLoad===0){
+                    if("function"===typeof callback){
+                        callback()
+                    }
                     _this.trigger('changeLocale', locale);
                 }
             };
@@ -94,6 +99,9 @@ I18n.prototype.changeLocale = function (locale) {
         });
     } else {
         _setLocale(locale);
+        if("function"===typeof callback){
+            callback()
+        }
         this.trigger('changeLocale', locale);
     }
 };
@@ -246,8 +254,8 @@ I18n.prototype.get=function(key,params,options){
  * @return {string}
  */
 I18n.prototype.getByData=function(params,options){
-    if(params && (params[this.getLocale()]||params[_localeDefault])){
-        return params[this.getLocale()]||params[_localeDefault]
+    if(params && (params[this.getLocale()]||params[this.getLocale().toUpperCase()]||params[_localeDefault])){
+        return params[this.getLocale()]||params[this.getLocale().toUpperCase()]||params[_localeDefault]
     }else{
         if(options && options.defaultValue){
             return options.defaultValue
@@ -399,10 +407,10 @@ var _setLocale=function(locale){
  */
 I18n.prototype.setProperty=function(params){
     if(params.locale){
-        _locale=params.locale
+        _locale=params.locale.toLowerCase()
     }
     if(params.localeDefault){
-        _localeDefault=params.localeDefault;
+        _localeDefault=params.localeDefault.toLowerCase();
     }
     if(params.versionJson){
         this._versionJson=params.versionJson;
@@ -413,6 +421,25 @@ I18n.prototype.setProperty=function(params){
     if(params.modulePrefix){
         _modulePrefix=params.modulePrefix;
     }
+
+};
+/**
+ * set translation data i18n
+ *
+ * @param data {object} Object translation
+ * @param locale {string} location
+ */
+I18n.prototype.setTranslation=function(data,locale){
+    if(!_translations[locale]){
+        _translations[locale]=data;
+    }else{
+        for (var key in data) {
+            if (!_translations[locale][key]) {
+                _translations[locale][key] = data[key];
+            }
+        }
+    }
+
 
 };
     return new I18n();
